@@ -14,7 +14,7 @@ class Program
         Console.WriteLine("C# is on");
 
         DrawShape();
-        Greet();
+        // Greet();
         Calculator();
 
     }
@@ -37,8 +37,21 @@ class Program
     }
 
 
+    //TODO: add a list of accepted ops
+    //TODO: check for division by zero
     private static void Calculator()
     {
+        Console.Write("Enter the first number: ");
+        var num1 = Convert.ToDecimal(Console.ReadLine());
+
+        // Console.Write("Enter the operation: ");
+        // var operation = Console.ReadLine();
+
+        Console.Write("Enter the second number: ");
+        var num2 = Convert.ToDecimal(Console.ReadLine());
+
+        var res = num1 + num2;
+        Console.WriteLine(res);
 
     }
 
