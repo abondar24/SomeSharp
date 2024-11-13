@@ -13,7 +13,7 @@ class Program
     {
         Console.WriteLine("C# is on");
 
-        DrawShape();
+        // DrawShape();
         // Greet();
         Calculator();
 
@@ -37,20 +37,48 @@ class Program
     }
 
 
-    //TODO: add a list of accepted ops
-    //TODO: check for division by zero
     private static void Calculator()
     {
+        var res = 0.00m;
+        var operators = new string[] { "+", "-", "*", "/" };
+
+
         Console.Write("Enter the first number: ");
         var num1 = Convert.ToDecimal(Console.ReadLine());
-
-        // Console.Write("Enter the operation: ");
-        // var operation = Console.ReadLine();
 
         Console.Write("Enter the second number: ");
         var num2 = Convert.ToDecimal(Console.ReadLine());
 
-        var res = num1 + num2;
+        Console.Write("Enter the operator: ");
+        var oper = Console.ReadLine();
+
+        int index = Array.IndexOf(operators, oper);
+        switch (index)
+        {
+            case 0:
+                res = num1 + num2;
+                break;
+            case 1:
+                res = num1 - num2;
+                break;
+            case 2:
+                res = num1 * num2;
+                break;
+            case 3:
+                if (num2 == 0.00m)
+                {
+                    Console.WriteLine("Division by zero");
+                    return;
+                }
+                res = num1 / num2;
+                break;
+            default:
+                Console.WriteLine("Unsupported operator. List of supported opertators: " + string.Join(", ", operators));
+                break;
+
+        }
+
+
         Console.WriteLine(res);
 
     }
