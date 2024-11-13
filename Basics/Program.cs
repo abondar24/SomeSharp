@@ -17,6 +17,7 @@ class Program
         // Greet();
         //Calculator();
         Guess();
+        //   Exponent();
 
     }
 
@@ -88,12 +89,35 @@ class Program
     {
         var secretWord = "program";
         var guess = "";
+        var guessCount = 0;
+        var maxGuesses = 5;
 
         while (guess != secretWord)
         {
-            Console.Write("Enter guess: ");
-            guess = Console.ReadLine();
+            if (guessCount < maxGuesses)
+            {
+                Console.Write("Enter guess: ");
+                guess = Console.ReadLine();
+                guessCount++;
+            }
+            else
+            {
+                Console.WriteLine("No guesses left");
+                break;
+            }
+
         }
+
+        if (guess == secretWord)
+        {
+            Console.WriteLine("You have won!");
+        }
+
+    }
+
+    private static void Exponent()
+    {
+
     }
 
 }
