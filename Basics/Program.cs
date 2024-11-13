@@ -42,12 +42,23 @@ class Program
         var res = 0.00m;
         var operators = new string[] { "+", "-", "*", "/", "pow" };
 
+        var num1 = 0.00m;
+        var num2 = 0.00m;
 
-        Console.Write("Enter the first number: ");
-        var num1 = Convert.ToDecimal(Console.ReadLine());
+        try
+        {
+            Console.Write("Enter the first number: ");
+            num1 = Convert.ToDecimal(Console.ReadLine());
 
-        Console.Write("Enter the second number: ");
-        var num2 = Convert.ToDecimal(Console.ReadLine());
+            Console.Write("Enter the second number: ");
+            num2 = Convert.ToDecimal(Console.ReadLine());
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Not a number entered");
+            Environment.Exit(1);
+        }
+
 
         Console.Write("Enter the operator: ");
         var oper = Console.ReadLine();
@@ -65,13 +76,17 @@ class Program
                 res = num1 * num2;
                 break;
             case 3:
-                if (num2 == 0.00m)
+                try
                 {
-                    Console.WriteLine("Division by zero");
-                    return;
+                    res = num1 / num2;
                 }
-                res = num1 / num2;
+                catch (DivideByZeroException ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    Environment.Exit(1);
+                }
                 break;
+
             case 4:
                 res = Power(num1, num2);
                 break;
@@ -82,8 +97,9 @@ class Program
 
         }
 
-
         Console.WriteLine(res);
+
+
 
     }
 
