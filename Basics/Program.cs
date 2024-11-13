@@ -15,10 +15,8 @@ class Program
 
         // DrawShape();
         // Greet();
-        //Calculator();
-        Guess();
-        //   Exponent();
-
+        Calculator();
+        //Guess();
     }
 
     private static void DrawShape()
@@ -42,7 +40,7 @@ class Program
     private static void Calculator()
     {
         var res = 0.00m;
-        var operators = new string[] { "+", "-", "*", "/" };
+        var operators = new string[] { "+", "-", "*", "/", "pow" };
 
 
         Console.Write("Enter the first number: ");
@@ -74,6 +72,10 @@ class Program
                 }
                 res = num1 / num2;
                 break;
+            case 4:
+                res = Power(num1, num2);
+                break;
+
             default:
                 Console.WriteLine("Unsupported operator. List of supported opertators: " + string.Join(", ", operators));
                 break;
@@ -115,9 +117,16 @@ class Program
 
     }
 
-    private static void Exponent()
+    private static decimal Power(decimal baseNum, decimal power)
     {
+        decimal res = 1;
+        for (int i = 0; i < power; i++)
+        {
+            res = res * baseNum;
+        }
 
+
+        return res;
     }
 
 }
