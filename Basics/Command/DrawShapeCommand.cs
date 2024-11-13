@@ -1,5 +1,3 @@
-using Basics.Lang;
-
 namespace Basics.Command;
 
 public class DrawShapeCommand : BasicsCommand

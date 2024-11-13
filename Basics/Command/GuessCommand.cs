@@ -1,6 +1,3 @@
-using Basics.Command;
-using Basics.Lang;
-
 namespace Basics.Command;
 
 public class GuessCommand : BasicsCommand
