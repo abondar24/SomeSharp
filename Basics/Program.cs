@@ -15,7 +15,8 @@ class Program
 
         // DrawShape();
         // Greet();
-        Calculator();
+        //Calculator();
+        Guess();
 
     }
 
@@ -81,6 +82,18 @@ class Program
 
         Console.WriteLine(res);
 
+    }
+
+    private static void Guess()
+    {
+        var secretWord = "program";
+        var guess = "";
+
+        while (guess != secretWord)
+        {
+            Console.Write("Enter guess: ");
+            guess = Console.ReadLine();
+        }
     }
 
 }
