@@ -1,6 +1,7 @@
 ﻿using AdminAPI;
 using System.Linq;
 
+//TODO: refactor namespace and separate classes
 namespace SchoolAdmin
 {
 
