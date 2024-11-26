@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ClubMember.Model;
+namespace ClubMember.Models;
 
 public class User
 {
