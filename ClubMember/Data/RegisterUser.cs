@@ -8,7 +8,7 @@ public class RegisterUser : IRegister
 {
     public bool Register(string[] fields)
     {
-        using var dbCOntext = new ClubMemberDbContext();
+        using var dbContext = new ClubMemberDbContext();
 
         User user = new()
         {
@@ -24,7 +24,7 @@ public class RegisterUser : IRegister
         };
 
 
-        dbCOntext.Users.Add(user);
+        dbContext.Users.Add(user);
 
         return true;
     }
@@ -36,7 +36,7 @@ public class RegisterUser : IRegister
 
         using var dbCOntext = new ClubMemberDbContext();
 
-        emailExists = dbCOntext.Users.Any(u => u.Email.ToLower().Trim() == emailAddress.Trim().ToLower());
+        emailExists = dbCOntext.Users.Any(u => string.Equals(u.Email.Trim().ToLower(), emailAddress.Trim().ToLower()));
 
         return emailExists;
     }
