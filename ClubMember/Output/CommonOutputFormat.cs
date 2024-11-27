@@ -18,10 +18,6 @@ public static class CommonOutputFormat
             break;
 
          case FontTheme.Default:
-            Console.BackgroundColor = ConsoleColor.Green;
-            Console.ForegroundColor = ConsoleColor.White;
-            break;
-
          default:
             Console.ResetColor();
             break;

@@ -56,112 +56,75 @@ public class UserRegistrationValidator(IRegister register) : IFieldValidator
         var userRegistrationField = (UserRegistrationField)fieldIndex;
 
 
-        string CheckRequiredField(string value, UserRegistrationField field)
+        string? CheckRequiredField(string value, UserRegistrationField field)
         {
             return _requiredValidFunc != null && !_requiredValidFunc(value)
                 ? $"You must enter a value for field: {Enum.GetName(typeof(UserRegistrationField), field)}{Environment.NewLine}"
-                : string.Empty;
+                : null;
         }
 
-        string CheckLength(string value, int minLength, int maxLength, UserRegistrationField field)
+        string? CheckLength(string value, int minLength, int maxLength, UserRegistrationField field)
         {
             return _stringLengthValidFunc != null && !_stringLengthValidFunc(value, minLength, maxLength)
                 ? $"The length for field: {Enum.GetName(typeof(UserRegistrationField), field)} must be between {minLength} and {maxLength}{Environment.NewLine}"
-                : string.Empty;
+                : null;
         }
 
 
-        string CheckPattern(string value, string pattern, string errorMessage)
+        string? CheckPattern(string value, string pattern, string errorMessage)
         {
             return _patternMatchValidFunc != null && !_patternMatchValidFunc(value, pattern)
                 ? errorMessage
-                : string.Empty;
+                : null;
         }
 
 
-        string CheckFieldsMatch(string value, string compareValue, string errorMessage)
+        string? CheckFieldsMatch(string value, string compareValue, string errorMessage)
         {
             return _compareFieldsValidFunc != null && !_compareFieldsValidFunc(value, compareValue)
                 ? errorMessage
-                : string.Empty;
+                : null;
         }
 
-        bool CheckDateValid(string value, out string errorMessage)
+        string? CheckDateValid(string value)
         {
             if (_dateValidFunc != null)
             {
                 var (isValidDate, validDateTime) = _dateValidFunc(value);
-                errorMessage = !isValidDate ? "You did not enter a valid date" : string.Empty;
-                return isValidDate;
+                return !isValidDate ? "You did not enter a valid date." : null;
+
             }
 
-            errorMessage = string.Empty;
-            return false;
+            return "Date validation function is not configured.";
 
         }
 
-        string CheckEmailExists(string value)
+        string? CheckEmailExists(string value)
         {
-            return _emailExistsFunc != null && !_emailExistsFunc(value) ? $"Email already exists {Environment.NewLine}" : string.Empty;
+            return _emailExistsFunc != null && _emailExistsFunc(value) ? $"Email already exists {Environment.NewLine}" : null;
         }
 
-        switch (userRegistrationField)
+        fieldInvalidMessage = userRegistrationField switch
         {
-            case UserRegistrationField.Email:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                ?? CheckPattern(fieldValue, CommonRegexPattern.Email_Address, "You must enter a valid email address: " + Environment.NewLine)
-                ?? CheckEmailExists(fieldValue);
-
-                break;
-
-            case UserRegistrationField.FirstName:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                                ?? CheckLength(fieldValue, FirstName_Min_Length, FirstName_Max_Length, userRegistrationField);
-                break;
-
-            case UserRegistrationField.LastName:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                                      ?? CheckLength(fieldValue, LastName_Min_Length, LasttName_Max_Length, userRegistrationField);
-                break;
-
-            case UserRegistrationField.Password:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                                      ?? CheckPattern(fieldValue, CommonRegexPattern.Strong_Password, "Your password must contain at least 1 small-case letter, 1 capital letter, 1 special character and the length should be between 6 - 10 characters" + Environment.NewLine);
-                break;
-
-            case UserRegistrationField.PasswordCompare:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                                      ?? CheckFieldsMatch(fieldValue, fieldArray[(int)UserRegistrationField.Password], "Your entry did not match your password" + Environment.NewLine);
-                break;
-
-            case UserRegistrationField.DateOfBirth:
-                if (CheckRequiredField(fieldValue, userRegistrationField) == string.Empty)
-                {
-                    CheckDateValid(fieldValue, out fieldInvalidMessage);
-                }
-                break;
-
-            case UserRegistrationField.PhoneNumber:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                                      ?? CheckPattern(fieldValue, CommonRegexPattern.DE_PhoneNumber, "You did not enter a valid UK phone number" + Environment.NewLine);
-                break;
-
-            case UserRegistrationField.Street:
-            case UserRegistrationField.City:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField);
-                break;
-
-            case UserRegistrationField.ZipCode:
-                fieldInvalidMessage = CheckRequiredField(fieldValue, userRegistrationField)
-                                      ?? CheckPattern(fieldValue, CommonRegexPattern.DE_ZipCode, "You did not enter a valid UK post code" + Environment.NewLine);
-                break;
-
-            default:
-                throw new ArgumentException("This field doesn't exist");
-
-        }
-
-
+            UserRegistrationField.Email => CheckRequiredField(fieldValue, userRegistrationField)
+                          ?? CheckPattern(fieldValue, CommonRegexPattern.Email_Address, "You must enter a valid email address: " + Environment.NewLine)
+                            ?? CheckEmailExists(fieldValue),
+            UserRegistrationField.FirstName => CheckRequiredField(fieldValue, userRegistrationField)
+                                            ?? CheckLength(fieldValue, FirstName_Min_Length, FirstName_Max_Length, userRegistrationField),
+            UserRegistrationField.LastName => CheckRequiredField(fieldValue, userRegistrationField)
+                                                  ?? CheckLength(fieldValue, LastName_Min_Length, LasttName_Max_Length, userRegistrationField),
+            UserRegistrationField.Password => CheckRequiredField(fieldValue, userRegistrationField)
+                                                  ?? CheckPattern(fieldValue, CommonRegexPattern.Strong_Password, "Your password must contain at least 1 small-case letter, 1 capital letter, 1 special character and the length should be between 6 - 10 characters" + Environment.NewLine),
+            UserRegistrationField.PasswordCompare => CheckRequiredField(fieldValue, userRegistrationField)
+                                                  ?? CheckFieldsMatch(fieldValue, fieldArray[(int)UserRegistrationField.Password], "Your entry did not match your password" + Environment.NewLine),
+            UserRegistrationField.DateOfBirth => CheckRequiredField(fieldValue, userRegistrationField) ?? CheckDateValid(fieldValue),
+            UserRegistrationField.PhoneNumber => CheckRequiredField(fieldValue, userRegistrationField)
+                                                  ?? CheckPattern(fieldValue, CommonRegexPattern.DE_PhoneNumber, "You did not enter a valid DE phone number" + Environment.NewLine),
+            UserRegistrationField.Street or UserRegistrationField.City => CheckRequiredField(fieldValue, userRegistrationField),
+            UserRegistrationField.ZipCode => (string)(CheckRequiredField(fieldValue, userRegistrationField)
+                                                  ?? CheckPattern(fieldValue, CommonRegexPattern.DE_ZipCode, "You did not enter a valid DE post code" + Environment.NewLine)),
+            _ => throw new ArgumentException("This field doesn't exist"),
+        };
         return string.IsNullOrEmpty(fieldInvalidMessage);
     }
 

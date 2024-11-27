@@ -23,7 +23,7 @@ public static class CommonOutputText
 
     public static void WriteMainHeading()
     {
-        WriteHeading(HeadingType.Club);
+        WriteHeading(HeadingType.Club, true);
     }
 
     public static void WriteLoginHeading()

@@ -11,7 +11,7 @@ public class LoginUser : ILogin
         using var dbContext = new ClubMemberDbContext();
 
         var user = dbContext.Users.FirstOrDefault(u => string.Equals(u.Email.Trim().ToLower(), emailAddress.Trim().ToLower()) &&
-          string.Equals(u.Password, password));
+            u.Password.Equals(password));
 
         return user;
     }

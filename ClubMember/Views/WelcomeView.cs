@@ -13,6 +13,9 @@ public class WelcomeView(User user) : IView
 
     public void RunView()
     {
+        Console.Clear();
+        CommonOutputText.WriteMainHeading();
+
         CommonOutputFormat.ChangeFontColor(FontTheme.Success);
         Console.WriteLine($"Hello {_user.FirstName}!!{Environment.NewLine} Welcome to the club");
         CommonOutputFormat.ChangeFontColor(FontTheme.Default);
