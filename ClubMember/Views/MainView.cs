@@ -1,21 +1,15 @@
 using ClubMember.Output;
-using ClubMember.FieldValidator;
+using ClubMember.FieldValidators;
 
 namespace ClubMember.Views;
 
 
-class MainView : IView
+class MainView(IView loginView, IView registerView) : IView
 {
     public IFieldValidator FieldValidator => null;
 
-    IView _registerView;
-    IView _loginView;
-
-    public MainView(IView loginView, IView registerView)
-    {
-        _loginView = loginView;
-        _registerView = registerView;
-    }
+    IView _registerView = registerView;
+    IView _loginView = loginView;
 
     public void RunView()
     {

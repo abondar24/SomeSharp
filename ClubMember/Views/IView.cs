@@ -1,4 +1,4 @@
-using ClubMember.FieldValidator;
+using ClubMember.FieldValidators;
 
 namespace ClubMember.Views;
 
