@@ -13,7 +13,7 @@ public class CoolingMechanism : ICoolingMechanism
     public void On()
     {
         Console.WriteLine();
-        Console.WriteLine("Cooling is off");
+        Console.WriteLine("Cooling is on");
         Console.WriteLine();
     }
 }

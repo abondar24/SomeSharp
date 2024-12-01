@@ -32,7 +32,8 @@ public class Device : IDevice
         Console.WriteLine("Device is running...");
 
         var coolingMechanism = new CoolingMechanism();
-        var heatSensor = new HeatSensor(Warning_Level, Emergency_Level);
+        var temperatureMonitor = new TemperatureMonitor();
+        var heatSensor = new HeatSensor(Warning_Level, Emergency_Level, temperatureMonitor);
         var thermostat = new Thermostat(coolingMechanism, heatSensor, this);
 
         thermostat.RunThermostat();

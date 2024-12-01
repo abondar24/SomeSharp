@@ -34,21 +34,21 @@ public class Thermostat(ICoolingMechanism coolingMechanism, IHeatSensor heatSens
 
     private void WarningLevelEventHandler(object sender, TemperatureEventArgs envt)
     {
-        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine();
-        Console.WriteLine($"Warning Alert!! Temperature is back to normal (Warning level is between {_device.WarningLevelTemp} and {_device.EmergencyLevelTemp})");
+        Console.WriteLine($"Warning Alert!! (Warning level is between {_device.WarningLevelTemp} and {_device.EmergencyLevelTemp})");
 
-        _coolingMechanism.Off();
+        _coolingMechanism.On();
         Console.ResetColor();
     }
 
     private void NormalLevelEventHandler(object sender, TemperatureEventArgs envt)
     {
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine();
-        Console.WriteLine($"Info Alert!! (Warning level is between {_device.WarningLevelTemp} and {_device.EmergencyLevelTemp})");
+        Console.WriteLine($"Info Alert!! Temperature is back to normal (Warning level is between {_device.WarningLevelTemp} and {_device.EmergencyLevelTemp})");
 
-        _coolingMechanism.On();
+        _coolingMechanism.Off();
         Console.ResetColor();
     }
 
