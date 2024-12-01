@@ -13,7 +13,7 @@ public class Thermostat(ICoolingMechanism coolingMechanism, IHeatSensor heatSens
     private IDevice _device = device;
 
 
-    private void WireUpHandlers()
+    public void WireUpHandlers()
     {
         _heatSensor.EmergencyLevelEventHandler += EmergencyLevelEventHandler;
         _heatSensor.WarningLevelEventHandler += WarningLevelEventHandler;

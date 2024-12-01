@@ -11,5 +11,7 @@ class Program
 
         var device = new Device();
         device.RunDevice();
+
+        Console.ReadKey();
     }
 }

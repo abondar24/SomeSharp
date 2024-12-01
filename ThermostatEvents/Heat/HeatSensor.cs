@@ -114,8 +114,9 @@ public class HeatSensor(double warningLevel, double emergencyLevel) : IHeatSenso
         }
     }
 
-    void IHeatSensor.RunHeatSensor()
+    public void RunHeatSensor()
     {
         Console.WriteLine("Heat sensor is running");
+        MonitorTemperature();
     }
 }

@@ -28,6 +28,7 @@ public class Device : IDevice
 
     public void RunDevice()
     {
+        Console.WriteLine();
         Console.WriteLine("Device is running...");
 
         var coolingMechanism = new CoolingMechanism();
