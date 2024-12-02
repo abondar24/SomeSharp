@@ -5,6 +5,7 @@ using SurvilanceManager.Observers;
 namespace SurvilanceManager;
 class Program
 {
+    //TODO: add class with constants for action types and dateforamt
     static void Main(string[] args)
     {
         Console.Clear();
