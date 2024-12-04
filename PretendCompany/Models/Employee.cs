@@ -1,4 +1,4 @@
-namespace PretendCompany.Data;
+namespace PretendCompany.Models;
 
 public class Employee
 {

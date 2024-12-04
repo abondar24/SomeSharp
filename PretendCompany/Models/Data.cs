@@ -1,4 +1,4 @@
-namespace PretendCompany.Data;
+namespace PretendCompany.Models;
 
 public static class Data
 {
@@ -39,7 +39,7 @@ public static class Data
             FirstName = "Gagik",
             LastName = "Pogosyan",
             Salary = 30000.0m,
-            IsManager = false,
+            IsManager = true,
             DepartmentId = 3
         }
         ];
