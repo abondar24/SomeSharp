@@ -1,4 +1,4 @@
-namespace TcpData;
+namespace PretendCompany.Data;
 
 public class Employee
 {
