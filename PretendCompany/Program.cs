@@ -1,6 +1,4 @@
-﻿using System.Runtime.ConstrainedExecution;
-using PretendCompany.Extensions;
-using PretendCompany.Models;
+﻿using PretendCompany.Commands;
 
 namespace PretendCompany;
 
@@ -8,100 +6,40 @@ class Program
 {
     static void Main(string[] args)
     {
-        var employees = Data.GetEmployees();
-        var departments = Data.GetDepartments();
 
-        //TODO: refactor to commands
-        var managers = employees.Filter(emp => emp.IsManager);
-        PrintFilteredEmployees(managers);
-
-        var hrDepartments = departments.Filter(dpt => dpt.ShortName.Equals("HR"));
-        PrintFilteredDepartments(hrDepartments);
-
-
-        var combniedEmployees = from emp in employees
-                                select new
-                                {
-                                    FullName = emp.FirstName + " " + emp.LastName,
-                                    AnnualSalary = emp.Salary * 12
-                                };
-
-        Console.WriteLine("Combined employee data");
-        foreach (var ce in combniedEmployees)
+        if (args.Length == 0)
         {
-            Console.WriteLine($"{ce.FullName,-20}{ce.AnnualSalary,10}");
+            Console.WriteLine("No arguments provided. Please use help to see the full list");
+            return;
         }
 
-        var highSalariedEmployees = from emp in employees.GetHighSalariedEmployees()
-                                    select new
-                                    {
-                                        FullName = emp.FirstName + " " + emp.LastName,
+        var command = GetCommand(args[0]);
 
-                                    };
-        Console.WriteLine("High salary employees");
-        foreach (var emp in highSalariedEmployees)
+        if (args.Length > 1)
         {
-            Console.WriteLine($"{emp.FullName}");
+            command.Execute(args[1]);
+        }
+        else
+        {
+            command.Execute();
         }
 
-
-        var employeesInDepartments = from dept in departments
-                                     join emp in employees
-                                     on dept.Id equals emp.DepartmentId
-                                     select new
-                                     {
-                                         FullName = emp.FirstName + " " + emp.LastName,
-                                         Salary = emp.Salary,
-                                         DepartmentName = dept.LongName
-                                     };
-
-        Console.WriteLine("Employees in departments");
-        foreach (var emp in employeesInDepartments)
-        {
-            Console.WriteLine($"{emp.FullName,-20}{emp.Salary,10}\t{emp.DepartmentName}");
-        }
-
-        var departmentsWithEmployees = from dept in departments
-                                       join emp in employees
-                                       on dept.Id equals emp.DepartmentId
-                                       into employeeGroup
-                                       select new
-                                       {
-                                           Employees = employeeGroup,
-                                           DepartmentName = dept.LongName
-                                       };
-
-        Console.WriteLine("Departments with employees");
-        foreach (var dept in departmentsWithEmployees)
-        {
-            Console.WriteLine($"Department Name: {dept.DepartmentName}");
-            foreach (var emp in dept.Employees)
-            {
-                Console.WriteLine($"\t{emp.FirstName} {emp.LastName}");
-            }
-        }
     }
 
-
-    private static void PrintFilteredEmployees(List<Employee> employees)
+    private static ICommand GetCommand(string arg)
     {
-        foreach (var emp in employees)
+        return arg switch
         {
-            Console.WriteLine($"First Name: {emp.FirstName}");
-            Console.WriteLine($"Last Name: {emp.LastName}");
-            Console.WriteLine($"Salary: {emp.Salary}");
-            Console.WriteLine($"Manager: {emp.IsManager}");
-            Console.WriteLine();
-        }
+            "help" => new HelpCommand(),
+            "mn" => new ManagersCommand(),
+            "dept" => new DepartmentCommand(),
+            "ce" => new CombinedEmployeeCommand(),
+            "hse" => new HighSalaryEmployeeCommand(),
+            "ed" => new EmployeesDepartmentsCommand(),
+            "de" => new DepartmentEmployeeCommand(),
+            _ => new HelpCommand()
+        };
     }
 
-    private static void PrintFilteredDepartments(List<Department> departments)
-    {
-        foreach (var dept in departments)
-        {
-            Console.WriteLine($"Short Name: {dept.ShortName}");
-            Console.WriteLine($"Long Name: {dept.LongName}");
-            Console.WriteLine();
-        }
-    }
+
 }

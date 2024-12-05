@@ -19,11 +19,11 @@ public static class Extension
         return filtered;
     }
 
-    public static IEnumerable<Employee> GetHighSalariedEmployees(this IEnumerable<Employee> employees)
+    public static IEnumerable<Employee> GetHighSalariedEmployees(this IEnumerable<Employee> employees, decimal salaryThreshold)
     {
         foreach (var emp in employees)
         {
-            if (emp.Salary >= 100000)
+            if (emp.Salary >= salaryThreshold)
             {
                 yield return emp;
             }
