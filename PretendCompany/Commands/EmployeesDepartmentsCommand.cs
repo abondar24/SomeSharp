@@ -9,6 +9,7 @@ public class EmployeesDepartmentsCommand : BaseQueryCommand
         var employeesInDepartments = from dept in _departments
                                      join emp in _employees
                                      on dept.Id equals emp.DepartmentId
+                                     orderby emp.DepartmentId, emp.Salary descending
                                      select new
                                      {
                                          FullName = emp.FirstName + " " + emp.LastName,

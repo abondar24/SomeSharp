@@ -20,7 +20,7 @@ public static class Data
             Id = 2,
             FirstName = "Arsen",
             LastName = "Karapetyan",
-            Salary = 50000.0m,
+            Salary = 40000.0m,
             IsManager = false,
             DepartmentId = 2
         },
@@ -38,7 +38,7 @@ public static class Data
             Id = 4,
             FirstName = "Gagik",
             LastName = "Pogosyan",
-            Salary = 30000.0m,
+            Salary = 70000.0m,
             IsManager = true,
             DepartmentId = 3
         }
