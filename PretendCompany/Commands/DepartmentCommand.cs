@@ -8,13 +8,11 @@ public class DepartmentCommand : BaseQueryCommand
 
     public override void Execute(string queryParam)
     {
-        var deptData = _departments.Filter(dpt => dpt.ShortName.Equals(queryParam.ToUpper()));
+        var deptData = _departments.Filter(dpt => dpt.ShortName.Equals(queryParam.ToUpper())).First();
 
-        foreach (var dept in deptData)
-        {
-            Console.WriteLine($"Short Name: {dept.ShortName}");
-            Console.WriteLine($"Long Name: {dept.LongName}");
-        }
+        Console.WriteLine($"Short Name: {deptData.ShortName}");
+        Console.WriteLine($"Long Name: {deptData.LongName}");
+
     }
 
     public override void Execute()
