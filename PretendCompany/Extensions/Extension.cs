@@ -1,3 +1,5 @@
+using PretendCompany.Models;
+
 namespace PretendCompany.Extensions;
 
 public static class Extension
@@ -15,5 +17,16 @@ public static class Extension
         }
 
         return filtered;
+    }
+
+    public static IEnumerable<Employee> GetHighSalariedEmployees(this IEnumerable<Employee> employees)
+    {
+        foreach (var emp in employees)
+        {
+            if (emp.Salary >= 100000)
+            {
+                yield return emp;
+            }
+        }
     }
 }
