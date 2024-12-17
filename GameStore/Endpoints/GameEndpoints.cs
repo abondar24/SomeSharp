@@ -29,7 +29,20 @@ public static class GameEndpoints
     {
         var group = app.MapGroup("games");
 
-        group.MapGet("/", () => games);
+        group.MapGet("/", (int? offset, int? limit) =>
+        {
+            var actualOffset = offset ?? 0;
+            var actualLimit = limit ?? 10;
+
+            if (actualOffset < 0 || actualLimit <= 0)
+            {
+                return Results.BadRequest(new { Message = "Offset must be >= 0 and limit must be > 0." });
+            }
+
+            var paginatedGames = games.Skip(actualOffset).Take(actualLimit).ToList();
+            return Results.Ok(paginatedGames);
+
+        });
 
         group.MapGet("/{id}", (int id) =>
         {
