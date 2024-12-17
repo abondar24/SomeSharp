@@ -6,3 +6,6 @@ var app = builder.Build();
 app.MapGameEndpoints();
 
 app.Run();
+
+//TODO: add swagger
+//TODO: add pagination to /games
