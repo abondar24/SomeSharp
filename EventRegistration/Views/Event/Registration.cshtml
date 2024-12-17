@@ -1,0 +1,51 @@
+@model IEnumerable<Registration>
+
+@{
+    ViewData["Title"] = "Event Registrations";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main" class="container">
+        <h1>@ViewBag.EventName Registrations</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var registration in Model)
+                {
+                    <tr>
+                        <td>@registration.Name</td>
+                        <td>@registration.PhoneNumber</td>
+                        <td>@registration.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - My Application</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,36 @@
+@model Event
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main" class="container">
+        <h1>@Model.Name</h1>
+        <p>@Model.Description</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Start Time:</strong> @Model.StartTime</p>
+        <p><strong>End Time:</strong> @Model.EndTime</p>
+    </main>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - My Application</p>
+    </footer>
+</body>
+</html>

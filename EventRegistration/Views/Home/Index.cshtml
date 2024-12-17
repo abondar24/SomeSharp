@@ -1,0 +1,98 @@
+@model IEnumerable<EventViewModel>
+
+@{
+    ViewData["Title"] = "Home";
+    var roles = ViewData["Roles"] as IList<string> ?? new List<string>(); // Default to an empty list if null
+    @* var eventRegistrations = ViewData["EventRegistrations"] as Dictionary<int, List<Registration>> ?? new Dictionary<int, List<Registration>>(); *@
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary">Logout</button>
+                        </form>
+                    </li>
+
+                }
+                else
+                {
+                    <li><a href="@Url.Action("LoginRegister", "Account")">Login</a></li>
+                }
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main" class="container">
+        @if (roles.Contains("EventCreator"))
+        {
+            <h1>Events and Registrations</h1>
+            <ul>
+                <li><a href="@Url.Action("Create", "Event")">Create Event</a></li>
+                @foreach (var item in Model)
+                {
+                    <li>
+                        <strong>@item.Event.Name</strong>
+                        <p>@item.Event.Description</p>
+                        <p><strong>Location:</strong> @item.Event.Location</p>
+                        <p><strong>Start Time:</strong> @item.Event.StartTime</p>
+                        <p><strong>End Time:</strong> @item.Event.EndTime</p>
+
+                        <h3>Registrations</h3>
+                        <ul>
+                            @if (item.Registrations.Any())
+                            {
+                                @foreach (var reg in item.Registrations)
+                                {
+                                    <li>@reg.Name - @reg.Email</li>
+                                }
+                            }
+                            else
+                            {
+                                <li>No registrations yet.</li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        }
+        else if (roles.Contains("EventParticipant"))
+        {
+            <h1>Available Events</h1>
+            <ul>
+                @foreach (var item in Model)
+                {
+                    <li>
+                        <strong>@item.Event.Name @(item.IsRegistered ? "(Registered)" : "")</strong>
+                        @if (item.IsRegistered)
+                        {
+                            <a href="@Url.Action("Details", "Event", new { id = item.Event.Id })">View Details</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Register", "Participant", new { id = item.Event.Id })">Register</a>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </main>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - My Application</p>
+    </footer>
+</body>
+</html>
