@@ -41,3 +41,7 @@ coverage/
 
 # Local History
 .vs/
+
+*.db
+*.db-shm
+*.db-wal
