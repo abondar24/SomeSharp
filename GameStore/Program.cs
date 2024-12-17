@@ -3,7 +3,7 @@ using GameStore.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connection = "Data Source=GameStore.db";
+var connection = builder.Configuration.GetConnectionString("GameStore");
 builder.Services.AddSqlite<GameStoreContext>(connection);
 
 
