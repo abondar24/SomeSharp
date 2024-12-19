@@ -1,21 +1,16 @@
+using EventRegistration.Data;
+using EventRegistration.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
-public class HomeController : Controller
+namespace EventRegistration.Controllers;
+public class HomeController(UserManager<IdentityUser> userManager, ApplicationDbContext context, ILogger<AccountController> logger) : Controller
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly ApplicationDbContext _context = context;
 
- private readonly ILogger<AccountController> _logger;
-
-    public HomeController(UserManager<IdentityUser> userManager, ApplicationDbContext context,ILogger<AccountController> logger)
-    {
-        _userManager = userManager;
-         _context = context;
-          _logger = logger;
-    }
+    private readonly ILogger<AccountController> _logger = logger;
 
     public async Task<IActionResult> Index() {
        var user = await _userManager.GetUserAsync(User);

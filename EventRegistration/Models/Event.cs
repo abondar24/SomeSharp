@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+namespace EventRegistration.Models;
 public class Event
 {
     public int Id { get; set; }

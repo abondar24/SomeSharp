@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
+namespace EventRegistration.Models;
+
 public class Registration
 {
     public int Id { get; set; }

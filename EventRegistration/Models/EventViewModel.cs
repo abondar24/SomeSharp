@@ -1,3 +1,6 @@
+
+namespace EventRegistration.Models;
+
 public class EventViewModel
 {
     public Event Event { get; set; }

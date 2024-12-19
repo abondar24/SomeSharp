@@ -1,25 +1,20 @@
+using EventRegistration.Data;
+using EventRegistration.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+
+namespace EventRegistration.Controllers;
 
 [Authorize(Roles = "EventParticipant")]
-public class ParticipantController : Controller
+public class ParticipantController(ApplicationDbContext context, ILogger<AccountController> logger, UserManager<IdentityUser> userManager) : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context = context;
 
-     private readonly ILogger<AccountController> _logger;
+    private readonly ILogger<AccountController> _logger = logger;
 
-     private readonly UserManager<IdentityUser> _userManager;
-
-
-    public ParticipantController(ApplicationDbContext context,  ILogger<AccountController> logger,UserManager<IdentityUser> userManager)
-    {
-        _context = context;
-         _userManager = userManager;
-         _logger = logger;
-    }
+    private readonly UserManager<IdentityUser> _userManager = userManager;
 
     // GET: Participant/Index
     public async Task<IActionResult> Index()

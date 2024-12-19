@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
+
+namespace EventRegistration.Models;
 public class LoginViewModel
 {
     [Required]

@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
+
+namespace EventRegistration.Models;
+
 public class RegisterViewModel
 {
     [Required]

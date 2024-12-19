@@ -1,21 +1,17 @@
+using EventRegistration.Data;
+using EventRegistration.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
+namespace EventRegistration.Controllers;
 
-public class EventController : Controller
+public class EventController(ApplicationDbContext context) : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context = context;
 
-    public EventController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-     // GET: Event/Create
-     [Authorize(Roles = "EventCreator")]
+    // GET: Event/Create
+    [Authorize(Roles = "EventCreator")]
     public IActionResult Create()
     {
         return View();
