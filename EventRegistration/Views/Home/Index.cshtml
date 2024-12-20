@@ -66,6 +66,15 @@
                                 <li>No registrations yet.</li>
                             }
                         </ul>
+                        @if (item.IsDrafted)
+                        {
+                            <a href="@Url.Action("ChangeStatus", "Event", new {id = item.Event.Id ,isDrafted = false })">Make public</a>
+                            
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("ChangeStatus", "Event", new { id = item.Event.Id, isDrafted = true })">Hide Event</a>
+                        }
                     </li>
                 }
             </ul>

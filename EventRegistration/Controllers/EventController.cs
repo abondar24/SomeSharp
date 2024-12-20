@@ -81,4 +81,27 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
     }
 
 
+    //GET: Event/ChangeStatus/5?isDrafted=false 
+    [HttpGet]
+    [Authorize(Roles = "EventCreator")]
+    public async Task<IActionResult> ChangeStatus(int id, bool isDrafted)
+    {
+        if (id <= 0)
+        {
+            return NotFound();
+        }
+
+        var @event = await _context.Events.FindAsync(id);
+        if (@event == null)
+        {
+            return NotFound();
+        }
+
+        @event.IsDrafted = isDrafted;
+        _context.Update(@event);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Home");
+    }
+
 }

@@ -18,6 +18,8 @@ public class Event
     [Required]
     public DateTime EndTime { get; set; }
 
+    public bool IsDrafted { get; set; }
+
     [Required]
     public string CreatorId { get; set; }
 

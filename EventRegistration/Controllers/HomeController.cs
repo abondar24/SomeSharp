@@ -36,11 +36,13 @@ public class HomeController(UserManager<IdentityUser> userManager, ApplicationDb
  _logger.LogInformation("Number of user registrations retrieved: {UserRegistrationsCount}", userRegistrations.Count);
 
         var events = await (from e in _context.Events
-                            where !isEventCreator || e.CreatorId == user.Id
+                            where (isEventCreator && e.CreatorId == user.Id) ||
+                           (!isEventCreator && !e.IsDrafted)
                             select new EventViewModel
                             {
                                 Event = e,
                                 IsRegistered = userRegistrations.Contains(e.Id),
+                                IsDrafted = e.IsDrafted,
                                 Registrations = (from r in _context.Registrations
                                                  where r.EventId == e.Id
                                                  select new RegistrationViewModel
