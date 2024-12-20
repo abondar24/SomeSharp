@@ -1,14 +1,17 @@
 using EventRegistration.Data;
 using EventRegistration.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistration.Controllers;
 
-public class EventController(ApplicationDbContext context) : Controller
+public class EventController(ApplicationDbContext context, UserManager<IdentityUser> userManager) : Controller
 {
     private readonly ApplicationDbContext _context = context;
+
+    private readonly UserManager<IdentityUser> _userManager = userManager;
 
     // GET: Event/Create
     [Authorize(Roles = "EventCreator")]
@@ -23,13 +26,20 @@ public class EventController(ApplicationDbContext context) : Controller
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> Create(Event model)
     {
+        ModelState.Remove("CreatorId");
         if (ModelState.IsValid)
         {
+
+            var user = await _userManager.GetUserAsync(User);
+            model.CreatorId = user.Id;
+
             _context.Events.Add(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home"); // Redirect to Home/Index after successful creation
-        } 
 
+            // Redirect to Home/Index after successful creation
+            return RedirectToAction("Index", "Home");
+
+        }
         return View(model);
     }
 

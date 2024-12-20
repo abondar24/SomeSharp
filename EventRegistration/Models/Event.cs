@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace EventRegistration.Models;
 public class Event
@@ -19,5 +18,10 @@ public class Event
     [Required]
     public DateTime EndTime { get; set; }
 
-    public ICollection<Registration> Registrations { get; set; }=  new List<Registration>();
+    [Required]
+    public string CreatorId { get; set; }
+
+
+    public ICollection<Registration> Registrations { get; set; } = [];
+
 }

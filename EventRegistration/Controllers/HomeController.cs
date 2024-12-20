@@ -12,44 +12,48 @@ public class HomeController(UserManager<IdentityUser> userManager, ApplicationDb
 
     private readonly ILogger<AccountController> _logger = logger;
 
-    public async Task<IActionResult> Index() {
-       var user = await _userManager.GetUserAsync(User);
-       if (user == null)  {
-        // Handle the case where the user is not found
-        return RedirectToAction("LoginRegister", "Account");
-      } 
+    public async Task<IActionResult> Index()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            // Handle the case where the user is not found
+            return RedirectToAction("LoginRegister", "Account");
+        }
 
 
-  var roles = await _userManager.GetRolesAsync(user);
-  _logger.LogInformation("User roles: {Roles}", string.Join(", ", roles));
+        var roles = await _userManager.GetRolesAsync(user);
 
- var userRegistrations = await _context.Registrations
-        .Where(r => r.UserId == user.Id)
+        bool isEventCreator = roles.Contains("EventCreator");
+
+        _logger.LogInformation("User roles: {Roles}", string.Join(", ", roles));
+
+        var userRegistrations = await _context.Registrations
+             .Where(r => r.UserId == user.Id)
         .Select(r => r.EventId)
         .ToListAsync();
 
  _logger.LogInformation("Number of user registrations retrieved: {UserRegistrationsCount}", userRegistrations.Count);
-  
-     var events = await _context.Events
-        .Select(e => new EventViewModel
-        {
-            Event = e,
-            IsRegistered = userRegistrations.Contains(e.Id),
-            Registrations = _context.Registrations
-                .Where(r => r.EventId == e.Id)
-                .Select(r => new RegistrationViewModel
-                {
-                    Name = r.Name,
-                    Email = r.Email
-                })
-                .ToList()
-        })
-        .ToListAsync();
 
-       _logger.LogInformation("Number of events retrieved: {EventCount}", events.Count);
-       ViewData["Roles"] = roles;
+        var events = await (from e in _context.Events
+                            where !isEventCreator || e.CreatorId == user.Id
+                            select new EventViewModel
+                            {
+                                Event = e,
+                                IsRegistered = userRegistrations.Contains(e.Id),
+                                Registrations = (from r in _context.Registrations
+                                                 where r.EventId == e.Id
+                                                 select new RegistrationViewModel
+                                                 {
+                                                     Name = r.Name,
+                                                     Email = r.Email
+                                                 }).ToList()
+                            }).ToListAsync();
 
-    return View(events);
+        _logger.LogInformation("Number of events retrieved: {EventCount}", events.Count);
+        ViewData["Roles"] = roles;
+
+        return View(events);
     }
 
 

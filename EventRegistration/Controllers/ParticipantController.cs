@@ -66,7 +66,6 @@ public class ParticipantController(ApplicationDbContext context, ILogger<Account
 
             var user = await _userManager.GetUserAsync(User);
 
-            _logger.LogInformation("HUI BLYAT {userId}",user.Id);
             registration.UserId = user.Id;
 
             _context.Add(registration);
