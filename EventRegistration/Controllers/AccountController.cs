@@ -14,28 +14,15 @@ public class AccountController(UserManager<IdentityUser> userManager, SignInMana
 
     // GET: Account/Login
     [HttpGet]
-    public IActionResult Login()
-    {
-
-        return View();
-    }
+    public IActionResult Login() => View();
 
     // GET: /Account/Register
     [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
+    public IActionResult Register() => View();
 
- // GET: /Account/LoginRegister
+    // GET: /Account/LoginRegister
     [HttpGet]
-    public IActionResult LoginRegister()
-    {
-        return View();
-    }
-
-
-
+    public IActionResult LoginRegister() => View();
 
     // POST: Account/Login
     [HttpPost]

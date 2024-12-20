@@ -52,7 +52,7 @@ public class HomeController(UserManager<IdentityUser> userManager, ApplicationDb
                                                  }).ToList()
                             }).ToListAsync();
 
-        //  _logger.LogInformation("Number of events retrieved: {EventCount}", events.Count);
+        _logger.LogInformation("Number of events retrieved: {EventCount}", events.Count);
         ViewData["Roles"] = roles;
 
         return View(events);

@@ -15,10 +15,7 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
 
     // GET: Event/Create
     [Authorize(Roles = "EventCreator")]
-    public IActionResult Create()
-    {
-        return View();
-    }
+    public IActionResult Create() => View();
 
     // POST: Event/Create
     [HttpPost]
