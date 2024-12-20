@@ -17,3 +17,8 @@ The other demos(apart of event registration): https://youtu.be/YT8s-90oDC0?si=iB
 - [AttributeDemo](AttributeDemo/README.md)
 - [Basics](Basics/Readme.md)
 - [ClubMember](ClubMember/README.md)
+- [DigitalInventory](DigitalInventory/README.md)
+- [EventRegistration](EventRegistration/README.md)
+- [FieldValidator](FieldValidator/README.MD)
+- [GameStore](GameStore/README.md)
+- [PretendCompany](PretendCompany/README.md)

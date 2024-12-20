@@ -17,5 +17,20 @@ A tiny app showing an example of how to create ASP .NET core application using M
    - Can see all events which are not in draft state
    - Choose one event and fill the registration form for it 
 
+## Build and Run
+- Debug mode
+```
+dotnet run
+```
+
+- Release mode
+```
+dotnet publish -c Release -r <required-arch> --self-contained
+
+./bin/Release/net8.0/osx-arm64/publish/EventRegistration
+```
+
+
+
 ## Access
 The app is available under localhost:8080

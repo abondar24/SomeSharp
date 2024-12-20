@@ -1,3 +1,3 @@
 # Field validator
 
-TODO: add a readne
+A tiny library used in [ClubMember](../ClubMember/README.md) for some common validation.

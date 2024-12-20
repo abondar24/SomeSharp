@@ -39,5 +39,3 @@ public class Device : IDevice
         thermostat.RunThermostat();
     }
 }
-//TODO: refactor code
-//TODO: fix issue with not sending any event all.
