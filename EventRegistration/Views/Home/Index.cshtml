@@ -69,7 +69,7 @@
                         @if (item.IsDrafted)
                         {
                             <a href="@Url.Action("ChangeStatus", "Event", new {id = item.Event.Id ,isDrafted = false })">Make public</a>
-                            
+                            <a href="@Url.Action("Edit", "Event",new { id = item.Event.Id })">Edit Event</a>
                         }
                         else
                         {

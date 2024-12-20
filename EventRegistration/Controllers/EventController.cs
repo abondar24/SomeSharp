@@ -43,6 +43,42 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
         return View(model);
     }
 
+
+    // GET: Event/Edit
+    [Authorize(Roles = "EventCreator")]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var @event = await _context.Events.FindAsync(id);
+        if (@event == null)
+        {
+            return NotFound();
+        }
+
+
+        return View(@event);
+    }
+
+    // POST: Event/Edit
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "EventCreator")]
+    public async Task<IActionResult> Edit(Event model)
+    {
+        ModelState.Remove("CreatorId");
+        if (ModelState.IsValid)
+        {
+
+
+            _context.Events.Update(model);
+            await _context.SaveChangesAsync();
+
+            // Redirect to Home/Index after successful creation
+            return RedirectToAction("Index", "Home");
+
+        }
+        return View(model);
+    }
+
     // GET: Event/Registrations/5
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> Registrations(int id)
