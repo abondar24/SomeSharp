@@ -10,11 +10,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
 
-<form asp-controller="Account" asp-action="Login" method="get">
-    <ul>
-        <li><a href="@Url.Action("Login", "Account")">Login</a></li>
-        <li><a href="@Url.Action("Register", "Account")">Register</a></li>
-    </ul>
-</form>
+<body class="d-flex flex-column min-vh-100">
+    <div class="container mt-4 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Event Register</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-primary w-48">Login</a>
+                            <a href="@Url.Action("Register", "Account")" class="btn btn-secondary w-48">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <p>&copy; @DateTime.Now.Year - Experimental Development unit</p>
+    </footer>
+
+
+
+</body>
+
+</html>

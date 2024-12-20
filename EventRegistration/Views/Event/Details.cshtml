@@ -12,26 +12,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
-            </ul>
+
+<body class="d-flex flex-column min-vh-100">
+    <header class="bg-dark text-white">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Index", "Home")">Home</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>
 
-    <main role="main" class="container">
-        <h1>@Model.Name</h1>
-        <p>@Model.Description</p>
-        <p><strong>Location:</strong> @Model.Location</p>
-        <p><strong>Start Time:</strong> @Model.StartTime</p>
-        <p><strong>End Time:</strong> @Model.EndTime</p>
+    <main role="main" class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2>@Model.Name</h2>
+            </div>
+            <div class="card-body">
+                <p>@Model.Description</p>
+                <p><strong>Location:</strong> @Model.Location</p>
+                <p><strong>Start Time:</strong> @Model.StartTime</p>
+                <p><strong>End Time:</strong> @Model.EndTime</p>
+
+                <a href="@Url.Action("Index", "Home")" class="btn btn-secondary mt-3">Back to Events</a>
+            </div>
+        </div>
+
+
     </main>
 
-    <footer>
-        <p>&copy; @DateTime.Now.Year - My Application</p>
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <p>&copy; @DateTime.Now.Year - Experimental Development unit</p>
     </footer>
+
 </body>
 </html>

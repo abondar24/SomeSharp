@@ -1,32 +1,75 @@
 @using EventRegistration.Models;
 @model LoginViewModel
 
-<h2>Login</h2>
+<!DOCTYPE html>
+<html lang="en">
 
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body class="d-flex flex-column min-vh-100">
 <form asp-controller="Account" asp-action="Login" method="post">
     @Html.AntiForgeryToken()
-    
-    <div class="form-group">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group form-check">
-        <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
-        <label asp-for="RememberMe" class="form-check-label">Remember me</label>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Login</button>
-    
+
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h3>Login</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" type="email" class="form-control"
+                                    placeholder="Enter your email" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" type="password" class="form-control"
+                                    placeholder="Enter your password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
 </form>
 
-<p>
+    <p class="text-center mt-3">
     <a asp-controller="Account" asp-action="Register">Don't have an account? Register</a>
 </p>
+
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <p>&copy; @DateTime.Now.Year - Experimental Development unit</p>
+    </footer>
+
+</body>
+
+</html>

@@ -14,14 +14,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
-<body>
-    <header>
-        <nav>
-            <ul>
+<body class="d-flex flex-column min-vh-100">
+    <header class="bg-dark text-white">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="collapse navbar-collapse" id="navbarNav">
+   <ul class="navbar-nav ml-auto">
                 @if (User.Identity.IsAuthenticated)
                 {
-                <li>
+                <li class="nav-item">
                         <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-primary">Logout</button>
@@ -31,21 +33,26 @@
                 }
                 else
                 {
-                    <li><a href="@Url.Action("LoginRegister", "Account")">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="@Url.Action("LoginRegister", "Account")">Login</a>
+                    </li>
                 }
             </ul>
+            </div>
         </nav>
     </header>
 
-    <main role="main" class="container">
+    <main role="main" class="container mt-5">
         @if (roles.Contains("EventCreator"))
         {
             <h1>Events and Registrations</h1>
-            <ul>
-                <li><a href="@Url.Action("Create", "Event")">Create Event</a></li>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="@Url.Action("Create", "Event")" class="btn btn-success mb-3">Create Event</a>
+                </li>
                 @foreach (var item in Model)
                 {
-                    <li>
+                    <li class="list-group-item">
                         <strong>@item.Event.Name</strong>
                         <p>@item.Event.Description</p>
                         <p><strong>Location:</strong> @item.Event.Location</p>
@@ -53,30 +60,30 @@
                         <p><strong>End Time:</strong> @item.Event.EndTime</p>
 
                         <h3>Registrations</h3>
-                        <ul>
+                        <ul class="list-group">
                             @if (item.Registrations.Any())
                             {
                                 @foreach (var reg in item.Registrations)
                                 {
-                                    <li>@reg.Name - @reg.Email</li>
+                                    <li class="list-group-item">@reg.Name - @reg.Email</li>
                                 }
                             }
                             else
                             {
-                                <li>No registrations yet.</li>
+                                <li class="list-group-item">No registrations yet.</li>
                             }
                         </ul>
                         @if (item.IsDrafted)
                         {
-                            <a href="@Url.Action("ChangeStatus", "Event", new {id = item.Event.Id ,isDrafted = false })">Make public</a>
-                            <a href="@Url.Action("Edit", "Event",new { id = item.Event.Id })">Edit Event</a>
+                            <a href="@Url.Action("ChangeStatus", "Event", new {id = item.Event.Id ,isDrafted = false })" class="btn btn-warning mt-3">Make public</a>
+                            <a href="@Url.Action("Edit", "Event",new { id = item.Event.Id })" class="btn btn-info mt-3">Edit Event</a>
                         }
                         else
                         {
-                            <a href="@Url.Action("ChangeStatus", "Event", new { id = item.Event.Id, isDrafted = true })">Hide Event</a>
+                            <a href="@Url.Action("ChangeStatus", "Event", new { id = item.Event.Id, isDrafted = true })" class="btn btn-secondary mt-3">Hide Event</a>
                         }
 
- <form asp-action="DeleteEvent"  asp-controller="Event" asp-route-id="@item.Event.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this event?');">
+ <form asp-action="DeleteEvent"  asp-controller="Event" asp-route-id="@item.Event.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this event?');" class="mt-3">
             <button type="submit" class="btn btn-danger">Delete event</button>
         </form>
 
@@ -87,18 +94,18 @@
         else if (roles.Contains("EventParticipant"))
         {
             <h1>Available Events</h1>
-            <ul>
+            <ul class="list-group">
                 @foreach (var item in Model)
                 {
-                    <li>
+                    <li class="list-group-item">
                         <strong>@item.Event.Name @(item.IsRegistered ? "(Registered)" : "")</strong>
                         @if (item.IsRegistered)
                         {
-                            <a href="@Url.Action("Details", "Event", new { id = item.Event.Id })">View Details</a>
+                            <a href="@Url.Action("Details", "Event", new { id = item.Event.Id })" class="btn btn-primary btn-sm ml-3">View Details</a>
                         }
                         else
                         {
-                            <a href="@Url.Action("Register", "Participant", new { id = item.Event.Id })">Register</a>
+                            <a href="@Url.Action("Register", "Participant", new { id = item.Event.Id })" class="btn btn-success btn-sm ml-3">Register</a>
                         }
                     </li>
                 }
@@ -106,8 +113,8 @@
         }
     </main>
 
-    <footer>
-        <p>&copy; @DateTime.Now.Year - My Application</p>
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <p>&copy; @DateTime.Now.Year - Experimental Development unit</p>
     </footer>
 </body>
 </html>
