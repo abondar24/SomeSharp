@@ -104,4 +104,29 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
         return RedirectToAction("Index", "Home");
     }
 
+
+    //POST: Event/DeleteEvent/5 
+    [HttpPost, ActionName("DeleteEvent")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "EventCreator")]
+    public async Task<IActionResult> DeleteEvent(int id)
+    {
+        if (id <= 0)
+        {
+            return NotFound();
+        }
+
+        var @event = await _context.Events.FindAsync(id);
+        if (@event == null)
+        {
+            return NotFound();
+        }
+
+        _context.Events.Remove(@event);
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Home");
+    }
+
 }

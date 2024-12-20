@@ -75,6 +75,11 @@
                         {
                             <a href="@Url.Action("ChangeStatus", "Event", new { id = item.Event.Id, isDrafted = true })">Hide Event</a>
                         }
+
+ <form asp-action="DeleteEvent"  asp-controller="Event" asp-route-id="@item.Event.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this event?');">
+            <button type="submit" class="btn btn-danger">Delete event</button>
+        </form>
+
                     </li>
                 }
             </ul>
