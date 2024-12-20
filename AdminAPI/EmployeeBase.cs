@@ -1,4 +1,4 @@
-namespace AdminAPI
+namespace AdminAPI;
 
 public class EmployeeBase : IEmployee
 {

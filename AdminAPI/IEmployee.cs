@@ -1,6 +1,6 @@
-﻿namespace AdminAPI
+﻿namespace AdminAPI;
 
- public interface IEmployee
+public interface IEmployee
 {
     int Id { get; set; }
 

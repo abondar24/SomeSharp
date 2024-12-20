@@ -1,23 +1,15 @@
 ﻿using AdminAPI;
-using System.Linq;
+using SchoolAdmin.Models;
 
-//TODO: refactor namespace and separate classes
-namespace SchoolAdmin
+namespace SchoolAdmin;
+
+
+
+public class Program
 {
 
-    public enum EmployeeType
+    static void Main(string[] args)
     {
-        Teacher,
-        HeadOfDeparment,
-        DeputyHeadMaster,
-        HeadMaster
-    }
-
-    class Program
-    {
-
-        static void Main(string[] args)
-        {
             List<IEmployee> employees = new List<IEmployee>();
 
             SeedData(employees);
@@ -46,67 +38,3 @@ namespace SchoolAdmin
         }
     }
 
-
-    public class Teacher : EmployeeBase
-    {
-        public override decimal Salary { get => base.Salary + (base.Salary * 0.05m); }
-    }
-
-    public class HeadOfDeparment : EmployeeBase
-    {
-        public override decimal Salary { get => base.Salary + (base.Salary * 0.13m); }
-    }
-
-    public class DeputyHeadMaster : EmployeeBase
-    {
-        public override decimal Salary { get => base.Salary + (base.Salary * 0.75m); }
-    }
-
-    public class HeadMaster : EmployeeBase
-    {
-        public override decimal Salary { get => base.Salary * 5; }
-    }
-
-    public static class EmployeeFactory
-    {
-        public static IEmployee GetEmployeeInstance(EmployeeType employeeType, int id, string firstName, string lastName, decimal salary)
-        {
-            IEmployee employee = null;
-
-            switch (employeeType)
-            {
-                case EmployeeType.Teacher:
-                    employee = FactoryPattern<IEmployee, Teacher>.GetInstance();
-                    break;
-
-                case EmployeeType.HeadOfDeparment:
-                    employee = FactoryPattern<IEmployee, HeadOfDeparment>.GetInstance();
-                    break;
-
-                case EmployeeType.DeputyHeadMaster:
-                    employee = FactoryPattern<IEmployee, DeputyHeadMaster>.GetInstance();
-                    break;
-
-                case EmployeeType.HeadMaster:
-                    employee = FactoryPattern<IEmployee, HeadMaster>.GetInstance();
-                    break;
-                default:
-                    break;
-            }
-
-            if (employee != null)
-            {
-                employee.Id = id;
-                employee.FirstName = firstName;
-                employee.LastName = lastName;
-                employee.Salary = salary;
-            }
-            else
-            {
-                throw new NullReferenceException();
-            }
-
-            return employee;
-        }
-    }
-}
