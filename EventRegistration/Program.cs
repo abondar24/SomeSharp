@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using EventRegistration.Data;
+using Prometheus;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,9 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
 
+builder.Services.AddRouting();
+builder.Services.AddEndpointsApiExplorer();
+
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -53,7 +57,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("EventParticipantPolicy", policy =>
         policy.RequireRole("EventParticipant"));
 });
-    
+
+builder.Services.AddHealthChecks();
+
 
 var app = builder.Build();
 var scope = app.Services.CreateScope();
@@ -81,4 +87,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+app.MapHealthChecks("/health");
+app.MapMetrics();
 app.Run();
