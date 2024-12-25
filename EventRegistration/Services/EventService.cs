@@ -23,10 +23,7 @@ public class EventService(ApplicationDbContext context)
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Event> GetEventByIdAsync(int id)
-    {
-        return await _context.Events.FindAsync(id);
-    }
+    public async Task<Event> GetEventByIdAsync(int id) => await _context.Events.FindAsync(id);
 
     public async Task ChangeEventStatusAsync(bool isDrafted, Event model)
     {
@@ -35,11 +32,9 @@ public class EventService(ApplicationDbContext context)
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Event> GetEventWithDetailsByIdAsync(int id)
-    {
-        return await _context.Events.Include(ev => ev.Registrations)
+    public async Task<Event> GetEventWithDetailsByIdAsync(int id) => await _context.Events.Include(ev => ev.Registrations)
           .FirstOrDefaultAsync(ev => ev.Id == id);
-    }
+
 
     public async Task<IList<EventViewModel>> GetUserEventsAsync(IdentityUser user, IList<string> roles, IList<int> eventIdsByUser)
     {
@@ -63,17 +58,13 @@ public class EventService(ApplicationDbContext context)
                       }).ToListAsync();
     }
 
-    public async Task<IList<EventParticipantViewModel>> GetEventsForParticipantAsync(IList<int> eventIdsByUser)
-    {
-        return await _context.Events
+    public async Task<IList<EventParticipantViewModel>> GetEventsForParticipantAsync(IList<int> eventIdsByUser) => await _context.Events
             .Select(e => new EventParticipantViewModel
             {
                 Event = e,
                 IsRegistered = eventIdsByUser.Contains(e.Id)
             })
             .ToListAsync();
-
-    }
 
     public async Task DeleteEventAsync(Event model)
     {
