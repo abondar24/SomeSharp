@@ -23,8 +23,8 @@ public class UserService(UserManager<IdentityUser> userManager, SignInManager<Id
         return false;
     }
 
-    public async Task<IdentityUser> GetUserAsync(ClaimsPrincipal user) => await _userManager.GetUserAsync(user);
-    public async Task<IdentityUser> GetUserByEmailAsync(string Email) => await _userManager.FindByEmailAsync(Email);
+    public async Task<IdentityUser?> GetUserAsync(ClaimsPrincipal user) => await _userManager.GetUserAsync(user);
+    public async Task<IdentityUser?> GetUserByEmailAsync(string Email) => await _userManager.FindByEmailAsync(Email);
     public async Task<IList<string>> GetRolesByUserAsync(IdentityUser user) => await _userManager.GetRolesAsync(user);
     public async Task<SignInResult> PasswordSignInAsync(LoginViewModel model) => await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
     public async Task SignOutAsync() => await _signInManager.SignOutAsync();
