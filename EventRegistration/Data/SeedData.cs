@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 namespace EventRegistration.Data;
 public static class SeedData

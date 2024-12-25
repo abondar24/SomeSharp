@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using EventRegistration.Data;
 using Prometheus;
+using EventRegistration.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,6 +60,10 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddHealthChecks();
+
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<RegistrationService>();
 
 
 var app = builder.Build();
