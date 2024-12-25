@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistration.Controllers;
 
-public class EventController(UserService userService, EventService eventService,
-RegistrationService registrationService, ILogger<EventController> logger) : Controller
+public class EventController(EventService eventService, RegistrationService registrationService,
+CheckService checkService, ILogger<EventController> logger) : Controller
 {
-    private readonly UserService _userService = userService;
 
     private readonly EventService _eventService = eventService;
 
     private readonly RegistrationService _registrationService = registrationService;
+
+    private readonly CheckService _checkService = checkService;
 
     private readonly ILogger<EventController> _logger = logger;
 
@@ -31,10 +32,9 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
         if (ModelState.IsValid)
         {
 
-            var user = await _userService.GetUserAsync(User);
+            var user = await _checkService.CheckUserAsync(User);
             if (user == null)
             {
-                _logger.LogWarning("User not found for the current request.");
                 return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
             }
             model.CreatorId = user.Id;
@@ -53,7 +53,7 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> Edit(int id)
     {
-        var @event = await CheckEventAsync(id);
+        var @event = await _checkService.CheckEventAsync(id);
         if (@event == null)
         {
             _logger.LogError("Event not found by id {}", id);
@@ -87,10 +87,9 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> Registrations(int id)
     {
-        var @event = await _eventService.GetEventByIdAsync(id);
+        var @event = await _checkService.CheckEventAsync(id);
         if (@event == null)
         {
-            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
@@ -104,10 +103,9 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
     // GET: Event/Details/5
     public async Task<IActionResult> Details(int id)
     {
-        var @event = await CheckEventAsync(id);
+        var @event = await _checkService.CheckEventAsync(id);
         if (@event == null)
         {
-            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
@@ -120,10 +118,9 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> ChangeStatus(int id, bool isDrafted)
     {
-        var @event = await CheckEventAsync(id);
+        var @event = await _checkService.CheckEventAsync(id);
         if (@event == null)
         {
-            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
@@ -140,10 +137,9 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
     public async Task<IActionResult> DeleteEvent(int id)
     {
 
-        var @event = await CheckEventAsync(id);
+        var @event = await _checkService.CheckEventAsync(id);
         if (@event == null)
         {
-            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
@@ -152,19 +148,5 @@ RegistrationService registrationService, ILogger<EventController> logger) : Cont
         return RedirectToAction("Index", "Home");
     }
 
-    private async Task<Event?> CheckEventAsync(int id)
-    {
-        if (id <= 0)
-        {
-            return null;
-        }
 
-        var @event = await _eventService.GetEventByIdAsync(id);
-        if (@event == null)
-        {
-            return null;
-        }
-
-        return @event;
-    }
 }

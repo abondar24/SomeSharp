@@ -8,24 +8,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace EventRegistration.Controllers;
 
 [Authorize(Roles = "EventParticipant")]
-public class ParticipantController(UserService userService, EventService eventService,
-RegistrationService registrationService, ILogger<ParticipantController> logger) : Controller
+public class ParticipantController(EventService eventService, RegistrationService registrationService, CheckService checkService, ILogger<ParticipantController> logger) : Controller
 {
-    private readonly UserService _userService = userService;
-
     private readonly EventService _eventService = eventService;
 
     private readonly RegistrationService _registrationService = registrationService;
+
+    private readonly CheckService _checkService = checkService;
 
     private readonly ILogger<ParticipantController> _logger = logger;
 
     // GET: Participant/Index
     public async Task<IActionResult> Index()
     {
-        var user = await CheckUserAsync(User);
+        var user = await _checkService.CheckUserAsync(User);
         if (user == null)
         {
-            _logger.LogError("User not found for the current request.");
             return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
         }
 
@@ -38,10 +36,9 @@ RegistrationService registrationService, ILogger<ParticipantController> logger) 
     // GET: Participant/Register/5
     public async Task<IActionResult> Register(int id)
     {
-        var @event = await CheckEventAsync(id);
+        var @event = await _checkService.CheckEventAsync(id);
         if (@event == null)
         {
-            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
@@ -57,55 +54,21 @@ RegistrationService registrationService, ILogger<ParticipantController> logger) 
         if (ModelState.IsValid)
         {
 
-            var @event = await CheckEventAsync(model.EventId);
+            var @event = await _checkService.CheckEventAsync(model.EventId);
             if (@event == null)
             {
-                _logger.LogError("Event not found by id {}", model.EventId);
                 return NotFound();
             }
 
-            var user = await CheckUserAsync(User);
+            var user = await _checkService.CheckUserAsync(User);
             if (user == null)
             {
-                _logger.LogError("User not found for the current request.");
                 return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
             }
 
             await _registrationService.RegisterUserAsync(model, user.Id);
             return RedirectToAction("Index", "Home");
-        } else {
-             foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-        {
-            _logger.LogError(error.ErrorMessage);
-        }
         }
         return View(model);
-    }
-
-    private async Task<Event?> CheckEventAsync(int id)
-    {
-        if (id <= 0)
-        {
-            return null;
-        }
-
-        var @event = await _eventService.GetEventByIdAsync(id);
-        if (@event == null)
-        {
-            return null;
-        }
-
-        return @event;
-    }
-
-    private async Task<IdentityUser?> CheckUserAsync(ClaimsPrincipal usr)
-    {
-        var user = await _userService.GetUserAsync(usr);
-        if (user == null)
-        {
-            return null;
-        }
-
-        return user;
     }
 }

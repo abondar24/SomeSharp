@@ -66,6 +66,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<RegistrationService>();
+builder.Services.AddScoped<CheckService>();
 
 
 var app = builder.Build();

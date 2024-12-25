@@ -32,36 +32,33 @@ public class AccountController(UserService userService, ILogger<AccountControlle
     public async Task<IActionResult> Login(LoginViewModel model)
     {
 
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-              foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-        {
-            _logger.LogError(error.ErrorMessage);
-        }
-            return View(model);
-        }
-
-        var result = await _userService.PasswordSignInAsync(model);
-        if (result.Succeeded)
-        {
-
-            var user = await _userService.GetUserByEmailAsync(model.Email);
-            if (user == null)
+            var result = await _userService.PasswordSignInAsync(model);
+            if (result.Succeeded)
             {
-                // Handle the case where user is not found
-                ModelState.AddModelError(string.Empty, "Unexpected error occurred. User not found.");
-                return View(model);
+
+                var user = await _userService.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    _logger.LogError("User not found by email");
+                    return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
+                }
+
+                var roles = await _userService.GetRolesByUserAsync(user);
+                if (roles.Contains("EventCreator") || roles.Contains("EventParticipant"))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 
-            var roles = await _userService.GetRolesByUserAsync(user);
-            if (roles.Contains("EventCreator") || roles.Contains("EventParticipant"))
-            {
-          
-                return RedirectToAction("Index", "Home"); // Redirect to Event creation page for EventCreators
-            }
-         
+
         }
-        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         return View(model);
     }
 
@@ -80,25 +77,18 @@ public class AccountController(UserService userService, ILogger<AccountControlle
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-              foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-        {
-            _logger.LogError(error.ErrorMessage);
+            var isUserCreated = await _userService.CreateUserAsync(model);
+            if (isUserCreated)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            else
+            {
+                _logger.LogError("Registration of new user failed");
+            }
         }
-            return View(model);
-        }
-
-        var isUserCreated = await _userService.CreateUserAsync(model);
-        if (isUserCreated)
-        {
-            return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
-        else
-        {
-            _logger.LogError("Registration of new user failed");
-        }
-
         return View(model);
     }
 }
