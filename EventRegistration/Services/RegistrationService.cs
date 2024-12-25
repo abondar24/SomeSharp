@@ -16,4 +16,11 @@ public class RegistrationService(ApplicationDbContext context)
              .Select(r => r.EventId)
              .ToListAsync();
     }
+
+    public async Task<IList<Registration>> GetRegistrationsByEventIdAsync(int eventId)
+    {
+        return await _context.Registrations
+            .Where(r => r.EventId == eventId)
+            .ToListAsync();
+    }
 }

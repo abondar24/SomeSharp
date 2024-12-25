@@ -1,17 +1,21 @@
-using EventRegistration.Data;
 using EventRegistration.Models;
+using EventRegistration.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistration.Controllers;
 
-public class EventController(ApplicationDbContext context, UserManager<IdentityUser> userManager) : Controller
+public class EventController(UserService userService, EventService eventService,
+RegistrationService registrationService, ILogger<EventController> logger) : Controller
 {
-    private readonly ApplicationDbContext _context = context;
+    private readonly UserService _userService = userService;
 
-    private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly EventService _eventService = eventService;
+
+    private readonly RegistrationService _registrationService = registrationService;
+
+    private readonly ILogger<EventController> _logger = logger;
+
 
     // GET: Event/Create
     [Authorize(Roles = "EventCreator")]
@@ -27,11 +31,15 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
         if (ModelState.IsValid)
         {
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userService.GetUserAsync(User);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found for the current request.");
+                return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
+            }
             model.CreatorId = user.Id;
 
-            _context.Events.Add(model);
-            await _context.SaveChangesAsync();
+            await _eventService.CreateEventAsync(model);
 
             // Redirect to Home/Index after successful creation
             return RedirectToAction("Index", "Home");
@@ -45,9 +53,10 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> Edit(int id)
     {
-        var @event = await _context.Events.FindAsync(id);
+        var @event = await CheckEventAsync(id);
         if (@event == null)
         {
+            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
@@ -65,9 +74,7 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
         if (ModelState.IsValid)
         {
 
-
-            _context.Events.Update(model);
-            await _context.SaveChangesAsync();
+            await _eventService.UpdateEventAsync(model);
 
             // Redirect to Home/Index after successful creation
             return RedirectToAction("Index", "Home");
@@ -80,15 +87,14 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> Registrations(int id)
     {
-        var @event = await _context.Events.FindAsync(id);
+        var @event = await _eventService.GetEventByIdAsync(id);
         if (@event == null)
         {
+            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
-        var registrations = await _context.Registrations
-            .Where(r => r.EventId == id)
-            .ToListAsync();
+        var registrations = await _registrationService.GetRegistrationsByEventIdAsync(id);
 
         ViewBag.EventName = @event.Name;
         return View(registrations);
@@ -97,20 +103,15 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
 
     // GET: Event/Details/5
     public async Task<IActionResult> Details(int id)
-    {     
-        if (id <=0){
-            return NotFound();
-        }
-
-         var @event = await _context.Events.Include(ev => ev.Registrations)
-         .FirstOrDefaultAsync(ev=> ev.Id == id);
-
-         if (@event == null)
+    {
+        var @event = await CheckEventAsync(id);
+        if (@event == null)
         {
+            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
-    
-              return View(@event);
+
+        return View(@event);
     }
 
 
@@ -119,20 +120,14 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> ChangeStatus(int id, bool isDrafted)
     {
-        if (id <= 0)
-        {
-            return NotFound();
-        }
-
-        var @event = await _context.Events.FindAsync(id);
+        var @event = await CheckEventAsync(id);
         if (@event == null)
         {
+            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
-        @event.IsDrafted = isDrafted;
-        _context.Update(@event);
-        await _context.SaveChangesAsync();
+        await _eventService.ChangeEventStatusAsync(isDrafted, @event);
 
         return RedirectToAction("Index", "Home");
     }
@@ -144,22 +139,32 @@ public class EventController(ApplicationDbContext context, UserManager<IdentityU
     [Authorize(Roles = "EventCreator")]
     public async Task<IActionResult> DeleteEvent(int id)
     {
-        if (id <= 0)
-        {
-            return NotFound();
-        }
 
-        var @event = await _context.Events.FindAsync(id);
+        var @event = await CheckEventAsync(id);
         if (@event == null)
         {
+            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
 
-        _context.Events.Remove(@event);
-
-        await _context.SaveChangesAsync();
+        await _eventService.DeleteEventAsync(@event);
 
         return RedirectToAction("Index", "Home");
     }
 
+    private async Task<Event?> CheckEventAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return null;
+        }
+
+        var @event = await _eventService.GetEventByIdAsync(id);
+        if (@event == null)
+        {
+            return null;
+        }
+
+        return @event;
+    }
 }

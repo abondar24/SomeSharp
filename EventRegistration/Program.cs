@@ -8,6 +8,9 @@ using Prometheus;
 using EventRegistration.Services;
 
 
+//TODO: refactor common logic in controllers
+//TODO: fix warnings in services
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure services

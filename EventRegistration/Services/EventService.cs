@@ -9,6 +9,38 @@ public class EventService(ApplicationDbContext context)
 {
     private readonly ApplicationDbContext _context = context;
 
+
+
+    public async Task CreateEventAsync(Event model)
+    {
+        _context.Events.Add(model);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateEventAsync(Event model)
+    {
+        _context.Events.Update(model);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Event> GetEventByIdAsync(int id)
+    {
+        return await _context.Events.FindAsync(id);
+    }
+
+    public async Task ChangeEventStatusAsync(bool isDrafted, Event model)
+    {
+        model.IsDrafted = isDrafted;
+        _context.Update(model);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Event> GetEventWithDetailsByIdAsync(int id)
+    {
+        return await _context.Events.Include(ev => ev.Registrations)
+          .FirstOrDefaultAsync(ev => ev.Id == id);
+    }
+
     public async Task<IList<EventViewModel>> GetUserEventsAsync(IdentityUser user, IList<string> roles, IList<int> eventIdsByUser)
     {
         bool isEventCreator = roles.Contains("EventCreator");
@@ -29,5 +61,11 @@ public class EventService(ApplicationDbContext context)
                                                Email = r.Email
                                            }).ToList()
                       }).ToListAsync();
+    }
+
+    public async Task DeleteEventAsync(Event model)
+    {
+        _context.Events.Remove(model);
+        await _context.SaveChangesAsync();
     }
 }
