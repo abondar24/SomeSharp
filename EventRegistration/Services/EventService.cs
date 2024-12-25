@@ -58,8 +58,8 @@ public class EventService(ApplicationDbContext context)
                       }).ToListAsync();
     }
 
-    public async Task<IList<EventParticipantViewModel>> GetEventsForParticipantAsync(IList<int> eventIdsByUser) => await _context.Events
-            .Select(e => new EventParticipantViewModel
+    public async Task<IList<BaseEventViewModel>> GetEventsForParticipantAsync(IList<int> eventIdsByUser) => await _context.Events
+            .Select(e => new BaseEventViewModel
             {
                 Event = e,
                 IsRegistered = eventIdsByUser.Contains(e.Id)

@@ -3,16 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EventRegistration.Models;
 
-public class RegisterViewModel
+public class RegisterViewModel : BaseLoginRegisterViewModel
 {
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
-
-    [Required]
-    [DataType(DataType.Password)]
-    public string Password { get; set; }
-
     [Required]
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]

@@ -1,6 +1,6 @@
 namespace EventRegistration.Models;
 
-public class EventParticipantViewModel
+public class BaseEventViewModel
 {
     public Event Event { get; set; }
     public bool IsRegistered { get; set; }
