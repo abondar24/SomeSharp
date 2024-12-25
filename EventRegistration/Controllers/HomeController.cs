@@ -18,20 +18,17 @@ RegistrationService registrationService, ILogger<HomeController> logger) : Contr
         var user = await _userService.GetUserAsync(User);
         if (user == null)
         {
-            _logger.LogWarning("User not found for the current request.");
+            _logger.LogError("User not found for the current request.");
             return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
         }
 
 
         var roles = await _userService.GetRolesByUserAsync(user);
-        _logger.LogInformation("User roles: {Roles}", string.Join(", ", roles));
         ViewData["Roles"] = roles;
 
         var eventIdsByUserId = await _registrationService.GetEventIdsByUserIdAsync(user.Id);
-        _logger.LogInformation("Number of eventIds by user retrieved: {EventIdsByUserCount}", eventIdsByUserId.Count);
 
         var events = await _eventService.GetUserEventsAsync(user, roles, eventIdsByUserId);
-        _logger.LogInformation("Number of events retrieved: {EventCount}", events.Count);
 
 
         return View(events);

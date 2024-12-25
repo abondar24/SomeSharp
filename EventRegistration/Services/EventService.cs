@@ -63,6 +63,18 @@ public class EventService(ApplicationDbContext context)
                       }).ToListAsync();
     }
 
+    public async Task<IList<EventParticipantViewModel>> GetEventsForParticipantAsync(IList<int> eventIdsByUser)
+    {
+        return await _context.Events
+            .Select(e => new EventParticipantViewModel
+            {
+                Event = e,
+                IsRegistered = eventIdsByUser.Contains(e.Id)
+            })
+            .ToListAsync();
+
+    }
+
     public async Task DeleteEventAsync(Event model)
     {
         _context.Events.Remove(model);

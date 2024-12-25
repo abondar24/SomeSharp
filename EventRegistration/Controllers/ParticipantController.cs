@@ -1,37 +1,36 @@
-using EventRegistration.Data;
+using System.Security.Claims;
 using EventRegistration.Models;
+using EventRegistration.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistration.Controllers;
 
 [Authorize(Roles = "EventParticipant")]
-public class ParticipantController(ApplicationDbContext context, ILogger<AccountController> logger, UserManager<IdentityUser> userManager) : Controller
+public class ParticipantController(UserService userService, EventService eventService,
+RegistrationService registrationService, ILogger<ParticipantController> logger) : Controller
 {
-    private readonly ApplicationDbContext _context = context;
+    private readonly UserService _userService = userService;
 
-    private readonly ILogger<AccountController> _logger = logger;
+    private readonly EventService _eventService = eventService;
 
-    private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly RegistrationService _registrationService = registrationService;
+
+    private readonly ILogger<ParticipantController> _logger = logger;
 
     // GET: Participant/Index
     public async Task<IActionResult> Index()
     {
-         var user = await _userManager.GetUserAsync(User);
-        var userRegistrations = await _context.Registrations
-            .Where(r => r.UserId == user.Id) // Ensure UserId is in Registration model
-            .Select(r => r.EventId)
-            .ToListAsync();
+        var user = await CheckUserAsync(User);
+        if (user == null)
+        {
+            _logger.LogError("User not found for the current request.");
+            return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
+        }
 
-        var events = await _context.Events
-            .Select(e => new
-            {
-                Event = e,
-                IsRegistered = userRegistrations.Contains(e.Id)
-            })
-            .ToListAsync();
+        var eventIdsByUser = await _registrationService.GetEventIdsByUserIdAsync(user.Id);
+        var events = await _eventService.GetEventsForParticipantAsync(eventIdsByUser);
 
         return View(events);
     }
@@ -39,37 +38,40 @@ public class ParticipantController(ApplicationDbContext context, ILogger<Account
     // GET: Participant/Register/5
     public async Task<IActionResult> Register(int id)
     {
-        var @event = await _context.Events.FindAsync(id);
+        var @event = await CheckEventAsync(id);
         if (@event == null)
         {
+            _logger.LogError("Event not found by id {}", id);
             return NotFound();
         }
+
         return View(new Registration { EventId = id });
     }
 
     // POST: Participant/Register/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register([Bind("Name,PhoneNumber,Email,EventId")] Registration registration)
+    public async Task<IActionResult> Register([Bind("Name,PhoneNumber,Email,EventId")] Registration model)
     {
         ModelState.Remove("UserId");
         if (ModelState.IsValid)
         {
 
-            var @event = await _context.Events.FindAsync(registration.EventId);
+            var @event = await CheckEventAsync(model.EventId);
             if (@event == null)
             {
-                 _logger.LogError("Event not found.");
-                ModelState.AddModelError("", "Event not found.");
-                return View(registration);
+                _logger.LogError("Event not found by id {}", model.EventId);
+                return NotFound();
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await CheckUserAsync(User);
+            if (user == null)
+            {
+                _logger.LogError("User not found for the current request.");
+                return RedirectToAction(nameof(AccountController.LoginRegister), "Account");
+            }
 
-            registration.UserId = user.Id;
-
-            _context.Add(registration);
-            await _context.SaveChangesAsync();
+            await _registrationService.RegisterUserAsync(model, user.Id);
             return RedirectToAction("Index", "Home");
         } else {
              foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
@@ -77,6 +79,33 @@ public class ParticipantController(ApplicationDbContext context, ILogger<Account
             _logger.LogError(error.ErrorMessage);
         }
         }
-        return View(registration);
+        return View(model);
+    }
+
+    private async Task<Event?> CheckEventAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return null;
+        }
+
+        var @event = await _eventService.GetEventByIdAsync(id);
+        if (@event == null)
+        {
+            return null;
+        }
+
+        return @event;
+    }
+
+    private async Task<IdentityUser?> CheckUserAsync(ClaimsPrincipal usr)
+    {
+        var user = await _userService.GetUserAsync(usr);
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user;
     }
 }

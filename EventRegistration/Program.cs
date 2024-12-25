@@ -9,6 +9,7 @@ using EventRegistration.Services;
 
 
 //TODO: refactor common logic in controllers
+//TODO: refactor event viewmodels which share same fields
 //TODO: fix warnings in services
 
 var builder = WebApplication.CreateBuilder(args);

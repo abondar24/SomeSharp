@@ -23,4 +23,12 @@ public class RegistrationService(ApplicationDbContext context)
             .Where(r => r.EventId == eventId)
             .ToListAsync();
     }
+
+    public async Task RegisterUserAsync(Registration registration, string userId)
+    {
+        registration.UserId = userId;
+
+        _context.Add(registration);
+        await _context.SaveChangesAsync();
+    }
 }
