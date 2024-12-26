@@ -3,8 +3,6 @@ using System.Security.Claims;
 using EventRegistration.Models;
 using EventRegistration.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace EventRegistration.Tests;

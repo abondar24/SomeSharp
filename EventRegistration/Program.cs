@@ -61,10 +61,10 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddHealthChecks();
 
-builder.Services.AddScoped<IUserService>();
-builder.Services.AddScoped<IEventService>();
-builder.Services.AddScoped<IRegistrationService>();
-builder.Services.AddScoped<ICheckService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+builder.Services.AddScoped<ICheckService, CheckService>();
 
 
 var app = builder.Build();
