@@ -34,48 +34,45 @@ public class CheckServiceTests
         Assert.Null(result);
     }
 
-    // [Fact]
-    // public async Task CheckEventAsync_ReturnsEvent_WhenEventExists()
-    // {
-    //     // Arrange
-    //     var eventId = 1;
-    //     var eventToReturn = new Event { Id = eventId };
-    //     _mockEventService.Setup(service => service.GetEventByIdAsync(eventId)).ReturnsAsync(eventToReturn);
+    [Fact]
+    public async Task CheckEventAsync_ReturnsEvent_WhenEventExists()
+    {
+        var @event = new Event
+        {
+            Id = 1,
+            Name = "Test",
+            Description = "Test",
+            Location = "Test",
+            StartTime = DateTime.Now,
+            EndTime = DateTime.Now,
+            IsDrafted = false,
+            CreatorId = "test"
 
-    //     // Act
-    //     var result = await _checkService.CheckEventAsync(eventId);
+        };
+        _mockEventService.Setup(service => service.GetEventByIdAsync(@event.Id)).ReturnsAsync(@event);
 
-    //     // Assert
-    //     Assert.Equal(eventToReturn, result);
-    // }
+        var result = await _checkService.CheckEventAsync(@event.Id);
+        Assert.Equal(@event, result);
+    }
 
-    // [Fact]
-    // public async Task CheckUserAsync_ReturnsNull_WhenUserNotFound()
-    // {
-    //     // Arrange
-    //     var claimsPrincipal = new ClaimsPrincipal();
-    //     _mockUserService.Setup(service => service.GetUserAsync(claimsPrincipal)).ReturnsAsync((IdentityUser)null);
+    [Fact]
+    public async Task CheckUserAsync_ReturnsNull_WhenUserNotFound()
+    {
+        var claimsPrincipal = new ClaimsPrincipal();
+        _mockUserService.Setup(service => service.GetUserAsync(claimsPrincipal)).ReturnsAsync((IdentityUser)null);
 
-    //     // Act
-    //     var result = await _checkService.CheckUserAsync(claimsPrincipal);
+        var result = await _checkService.CheckUserAsync(claimsPrincipal);
+        Assert.Null(result);
+    }
 
-    //     // Assert
-    //     Assert.Null(result);
-    //     _mockLogger.Verify(logger => logger.LogError(It.IsAny<string>()), Times.Once);
-    // }
+    [Fact]
+    public async Task CheckUserAsync_ReturnsUser_WhenUserExists()
+    {
+        var claimsPrincipal = new ClaimsPrincipal();
+        var userToReturn = new IdentityUser();
+        _mockUserService.Setup(service => service.GetUserAsync(claimsPrincipal)).ReturnsAsync(userToReturn);
 
-    // [Fact]
-    // public async Task CheckUserAsync_ReturnsUser_WhenUserExists()
-    // {
-    //     // Arrange
-    //     var claimsPrincipal = new ClaimsPrincipal();
-    //     var userToReturn = new IdentityUser();
-    //     _mockUserService.Setup(service => service.GetUserAsync(claimsPrincipal)).ReturnsAsync(userToReturn);
-
-    //     // Act
-    //     var result = await _checkService.CheckUserAsync(claimsPrincipal);
-
-    //     // Assert
-    //     Assert.Equal(userToReturn, result);
-    // }
+        var result = await _checkService.CheckUserAsync(claimsPrincipal);
+        Assert.Equal(userToReturn, result);
+    }
 }
