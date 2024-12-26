@@ -9,6 +9,14 @@ public class RegistrationService(ApplicationDbContext context)
 
     private readonly ApplicationDbContext _context = context;
 
+    public async Task RegisterUserAsync(Registration registration, string userId)
+    {
+        registration.UserId = userId;
+
+        _context.Add(registration);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<IList<int>> GetEventIdsByUserIdAsync(string userId) => await _context.Registrations
              .Where(r => r.UserId == userId)
              .Select(r => r.EventId)
@@ -17,11 +25,4 @@ public class RegistrationService(ApplicationDbContext context)
     public async Task<IList<Registration>> GetRegistrationsByEventIdAsync(int eventId) => await _context.Registrations
             .Where(r => r.EventId == eventId)
             .ToListAsync();
-    public async Task RegisterUserAsync(Registration registration, string userId)
-    {
-        registration.UserId = userId;
-
-        _context.Add(registration);
-        await _context.SaveChangesAsync();
-    }
 }

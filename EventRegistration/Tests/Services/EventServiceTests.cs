@@ -250,6 +250,7 @@ public class EventServiceTests
 
         var result = await _context.Events.FindAsync(1);
         Assert.Null(result);
+
     }
 
 }
