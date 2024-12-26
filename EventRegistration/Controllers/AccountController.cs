@@ -1,6 +1,5 @@
 using EventRegistration.Models;
 using EventRegistration.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -52,12 +51,6 @@ public class AccountController(IUserService userService, ILogger<AccountControll
                 }
 
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            }
-
-
         }
         return View(model);
     }
