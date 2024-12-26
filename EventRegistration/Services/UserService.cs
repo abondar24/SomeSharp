@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EventRegistration.Services;
 
-public class UserService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+public class UserService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) : IUserService
 {
     private readonly UserManager<IdentityUser> _userManager = userManager;
 

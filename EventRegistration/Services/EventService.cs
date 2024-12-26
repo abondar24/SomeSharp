@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistration.Services;
 
-public class EventService(ApplicationDbContext context)
+public class EventService(ApplicationDbContext context) : IEventService
 {
     private readonly ApplicationDbContext _context = context;
 

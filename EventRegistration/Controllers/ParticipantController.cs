@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace EventRegistration.Controllers;
 
 [Authorize(Roles = "EventParticipant")]
-public class ParticipantController(EventService eventService, RegistrationService registrationService, CheckService checkService, ILogger<ParticipantController> logger) : Controller
+public class ParticipantController(IEventService eventService, IRegistrationService registrationService, ICheckService checkService, ILogger<ParticipantController> logger) : Controller
 {
-    private readonly EventService _eventService = eventService;
+    private readonly IEventService _eventService = eventService;
 
-    private readonly RegistrationService _registrationService = registrationService;
+    private readonly IRegistrationService _registrationService = registrationService;
 
-    private readonly CheckService _checkService = checkService;
+    private readonly ICheckService _checkService = checkService;
 
     private readonly ILogger<ParticipantController> _logger = logger;
 

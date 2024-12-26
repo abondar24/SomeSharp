@@ -8,7 +8,7 @@ namespace EventRegistration.Tests.Services;
 
 public class RegistrationServiceTests
 {
-    private readonly RegistrationService _registrationService;
+    private readonly IRegistrationService _registrationService;
 
     private readonly ApplicationDbContext _context;
 

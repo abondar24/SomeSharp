@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistration.Controllers;
 
-public class EventController(EventService eventService, RegistrationService registrationService,
-CheckService checkService, ILogger<EventController> logger) : Controller
+public class EventController(IEventService eventService, IRegistrationService registrationService,
+ICheckService checkService, ILogger<EventController> logger) : Controller
 {
 
-    private readonly EventService _eventService = eventService;
+    private readonly IEventService _eventService = eventService;
 
-    private readonly RegistrationService _registrationService = registrationService;
+    private readonly IRegistrationService _registrationService = registrationService;
 
-    private readonly CheckService _checkService = checkService;
+    private readonly ICheckService _checkService = checkService;
 
     private readonly ILogger<EventController> _logger = logger;
 

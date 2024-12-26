@@ -9,7 +9,7 @@ namespace EventRegistration.Tests.Services;
 
 public class EventServiceTests
 {
-    private readonly EventService _eventService;
+    private readonly IEventService _eventService;
 
     private readonly ApplicationDbContext _context;
 

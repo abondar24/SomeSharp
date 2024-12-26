@@ -12,7 +12,7 @@ public class UserServiceTests
 
     private readonly Mock<UserManager<IdentityUser>> _userManagerMock;
     private readonly Mock<SignInManager<IdentityUser>> _signInManagerMock;
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
     public UserServiceTests()
     {

@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace EventRegistration.Services;
 
-public class CheckService(UserService userService, EventService eventService, ILogger<CheckService> logger)
+public class CheckService(IUserService userService, IEventService eventService, ILogger<CheckService> logger) : ICheckService
 {
-    private readonly UserService _userService = userService;
+    private readonly IUserService _userService = userService;
 
-    private readonly EventService _eventService = eventService;
+    private readonly IEventService _eventService = eventService;
 
     private readonly ILogger<CheckService> _logger = logger;
 

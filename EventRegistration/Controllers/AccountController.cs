@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistration.Controllers;
 
-public class AccountController(UserService userService, ILogger<AccountController> logger) : Controller
+public class AccountController(IUserService userService, ILogger<AccountController> logger) : Controller
 {
 
-    private readonly UserService _userService = userService;
+    private readonly IUserService _userService = userService;
 
 
     private readonly ILogger<AccountController> _logger = logger;

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistration.Services;
 
-public class RegistrationService(ApplicationDbContext context)
+public class RegistrationService(ApplicationDbContext context) : IRegistrationService
 {
 
     private readonly ApplicationDbContext _context = context;

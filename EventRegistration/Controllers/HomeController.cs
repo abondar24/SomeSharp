@@ -2,16 +2,16 @@ using EventRegistration.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistration.Controllers;
-public class HomeController(UserService userService, EventService eventService,
-RegistrationService registrationService, CheckService checkService, ILogger<HomeController> logger) : Controller
+public class HomeController(IUserService userService, IEventService eventService,
+IRegistrationService registrationService, ICheckService checkService, ILogger<HomeController> logger) : Controller
 {
-    private readonly UserService _userService = userService;
+    private readonly IUserService _userService = userService;
 
-    private readonly EventService _eventService = eventService;
+    private readonly IEventService _eventService = eventService;
 
-    private readonly RegistrationService _registrationService = registrationService;
+    private readonly IRegistrationService _registrationService = registrationService;
 
-    private readonly CheckService _checkService = checkService;
+    private readonly ICheckService _checkService = checkService;
 
     private readonly ILogger<HomeController> _logger = logger;
 
