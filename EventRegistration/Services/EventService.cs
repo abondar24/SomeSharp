@@ -9,8 +9,6 @@ public class EventService(ApplicationDbContext context)
 {
     private readonly ApplicationDbContext _context = context;
 
-
-
     public async Task CreateEventAsync(Event model)
     {
         _context.Events.Add(model);
@@ -23,14 +21,14 @@ public class EventService(ApplicationDbContext context)
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Event?> GetEventByIdAsync(int id) => await _context.Events.FindAsync(id);
-
     public async Task ChangeEventStatusAsync(bool isDrafted, Event model)
     {
         model.IsDrafted = isDrafted;
         _context.Update(model);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Event?> GetEventByIdAsync(int id) => await _context.Events.FindAsync(id);
 
     public async Task<Event?> GetEventWithDetailsByIdAsync(int id) => await _context.Events.Include(ev => ev.Registrations)
           .FirstOrDefaultAsync(ev => ev.Id == id);

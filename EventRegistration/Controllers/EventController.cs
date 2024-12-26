@@ -103,13 +103,19 @@ CheckService checkService, ILogger<EventController> logger) : Controller
     // GET: Event/Details/5
     public async Task<IActionResult> Details(int id)
     {
-        var @event = await _checkService.CheckEventAsync(id);
-        if (@event == null)
+        if (id <= 0)
         {
             return NotFound();
         }
 
-        return View(@event);
+        var eventDetailed = await _eventService.GetEventWithDetailsByIdAsync(id);
+        if (eventDetailed == null)
+        {
+            _logger.LogError("Event not found by id {}", id);
+            return NotFound();
+        }
+
+        return View(eventDetailed);
     }
 
 
