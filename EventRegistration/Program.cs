@@ -68,9 +68,17 @@ builder.Services.AddScoped<ICheckService, CheckService>();
 
 
 var app = builder.Build();
-var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-SeedData.Initialize(services).Wait();
+
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services).Wait();
+}
 
 
 // Configure the HTTP request pipeline
