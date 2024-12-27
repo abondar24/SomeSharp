@@ -25,16 +25,17 @@ dotnet run
 
 - Release mode
 ```
-dotnet publish -c Release -r <required-arch> --self-contained
+dotnet publish -c Release -o ./bin/Release/net8.0/publish
 
-./bin/Release/net8.0/osx-arm64/publish/EventRegistration
+./bin/Release/net8.0/publish/EventRegistration
 ```
 
 - Docker
 ```
+dotnet publish -c Release -o ./bin/Release/net8.0/publish
+
 docker-compose up
 ```
-
 
 ## Access
 The app is available under localhost:8020
