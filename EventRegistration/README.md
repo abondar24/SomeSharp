@@ -30,7 +30,11 @@ dotnet publish -c Release -r <required-arch> --self-contained
 ./bin/Release/net8.0/osx-arm64/publish/EventRegistration
 ```
 
+- Docker
+```
+docker-compose up
+```
 
 
 ## Access
-The app is available under localhost:8080
+The app is available under localhost:8020

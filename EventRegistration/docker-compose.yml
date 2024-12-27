@@ -1,0 +1,34 @@
+services:
+  app:
+    image: abondar/eventregistration
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8020:8020"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8020
+    depends_on:
+      eventDb:
+        condition: service_healthy
+
+  eventDb:
+    image: mysql
+    container_name: eventDb
+    environment:
+      MYSQL_ROOT_PASSWORD: root4mysql
+      MYSQL_DATABASE: event_registration
+    ports:
+      - "3306:3306"
+    healthcheck:  
+       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot4mysql"]
+       interval: 10s
+       timeout: 5s
+       retries: 5
+  
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
